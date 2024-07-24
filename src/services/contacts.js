@@ -1,20 +1,40 @@
-import { Contact } from '../db/contact.js';
-import mongoose from 'mongoose';
+import { Contact } from '../db/models/contact.js';
 
 export const getAllContacts = async () => {
   const contacts = await Contact.find();
   return contacts;
 };
 
-export const getContactById = async (id) => {
-  try {
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return null;
-    }
-    const contact = await Contact.findById(id);
-    return contact;
-  } catch (error) {
-    console.error('Error getting contact by ID:', error);
-    throw error;
+export const getContactById = async (contactId) => {
+  const contact = await Contact.findById(contactId);
+  return contact;
+};
+
+export const createContact = async (payload) => {
+  const contact = await Contact.create(payload);
+  return contact;
+};
+
+export const upsertContact = async (contactId, payload, options = {}) => {
+  const rawResult = await Contact.findOneAndUpdate(
+    { _id: contactId },
+    payload,
+    {
+      new: true,
+      includeResultMetadata: true,
+      ...options,
+    },
+  );
+
+  if (!rawResult || !rawResult.value) {
+    return null;
   }
+  return rawResult.value;
+};
+
+export const deleteContact = async (contactId) => {
+  const contact = await Contact.findOneAndDelete({
+    _id: contactId,
+  });
+  return contact;
 };
