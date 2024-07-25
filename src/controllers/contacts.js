@@ -1,3 +1,4 @@
+import createHttpError from 'http-errors';
 import {
   getAllContacts,
   getContactById,
@@ -5,12 +6,23 @@ import {
   upsertContact,
   deleteContact,
 } from '../services/contacts.js';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortOrder.js';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
 
-import createHttpError from 'http-errors';
-import { notFoundHandler } from '../middlewares/notFoundHandler.js';
+export const getContactsController = async (req, res) => {
+  const { page, perPage } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = parseSortParams(req.query);
+  const filter = parseFilterParams(req.query);
 
-export const getContactsController = async (req, res, next) => {
-  const contacts = await getAllContacts();
+  const contacts = await getAllContacts({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    filter,
+  });
+
   res.status(200).json({
     status: 200,
     message: 'Successfully found contacts!',
@@ -23,7 +35,7 @@ export const getContactByIdController = async (req, res, next) => {
   const contact = await getContactById(contactId);
 
   if (!contact) {
-    next(createHttpError(notFoundHandler));
+    next(createHttpError(404, 'Contact not found!'));
     return;
   }
   res.status(200).json({
@@ -71,10 +83,5 @@ export const deleteContactController = async (req, res, next) => {
     next(createHttpError(404, 'Contact not found'));
     return;
   }
-
-  res.status(204).json({
-    status: 204,
-    message: `Successfully deleted a contact!`,
-    data: contact,
-  });
-};
+  res.status(204).send();
+}

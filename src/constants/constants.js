@@ -4,4 +4,9 @@ export const ENV_VARS = {
     MONGODB_PASSWORD: 'MONGODB_PASSWORD',
     MONGODB_URL: 'MONGODB_URL',
     MONGODB_DB: 'MONGODB_DB',
-  };
+};
+
+export const SORT_ORDER = {
+  ASC: 'asc',
+  DESC: 'desc',
+};
