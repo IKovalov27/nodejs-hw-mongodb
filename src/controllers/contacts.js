@@ -3,7 +3,7 @@ import {
   getAllContacts,
   getContactById,
   createContact,
-  upsertContact,
+  updateContact,
   deleteContact,
 } from '../services/contacts.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
@@ -62,7 +62,7 @@ export const createContactController = async (req, res, next) => {
 
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
-  const contact = await upsertContact(
+  const contact = await updateContact(
     { contactId, userId: req.user._id },
     req.body,
   );
