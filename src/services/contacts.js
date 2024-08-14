@@ -1,10 +1,11 @@
 import { Contact } from '../db/models/contact.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { SORT_ORDER } from '../constants/constants.js';
+import mongoose from 'mongoose';
 
 export const getAllContacts = async ({
-  page = 1,
-  perPage = 10,
+  page,
+  perPage,
   sortOrder = SORT_ORDER.ASC,
   sortBy = '_id',
   filter = {},
@@ -41,8 +42,16 @@ export const getAllContacts = async ({
 };
 
 export const getContactById = async (contactId, userId) => {
-  const contact = await Contact.findById({ _id: contactId, userId });
-  return contact;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(contactId, userId)) {
+      return null;
+    }
+    const contact = await Contact.findOne({_id: contactId});
+    return contact;
+  } catch (error) {
+    console.error('Error getting contact by ID:', error);
+    throw error;
+  }
 };
 
 export const createContact = async (payload, userId) => {

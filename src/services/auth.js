@@ -5,12 +5,14 @@ import { Session } from '../db/models/session.js';
 import { createSession } from '../utils/createSession.js';
 
 export const registerUser = async (payload) => {
-  const hashedPassword = await bcrypt.hash(payload.password, 10);
   const emailIsNotUnique = await User.findOne({ email: payload.email });
-  if (emailIsNotUnique) {
-    throw createHttpError(409, 'Email in use');
-  }
-  return await User.create({ ...payload, password: hashedPassword });
+  if (emailIsNotUnique) throw createHttpError(409, 'Email in use');
+
+  const hashedPassword = await bcrypt.hash(payload.password, 10);
+  return await User.create({
+    ...payload,
+    password: hashedPassword,
+  });
 };
 
 export const loginUser = async ({ email, password }) => {
