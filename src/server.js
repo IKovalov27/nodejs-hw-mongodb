@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import pino from "pino-http";
-import session from "express-session";
+import session from "cookie-session";
 import morgan from "morgan";
 import { env } from "./utils/env.js";
 import dotenv from "dotenv";
