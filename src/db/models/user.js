@@ -1,25 +1,21 @@
-import { model, Schema } from "mongoose";
+import { Schema, model } from 'mongoose';
 
-const usersSchema = new Schema(
+const userSchema = new Schema(
   {
     name: { type: String, required: true },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      match: [/.+@.+\..+/, "Please fill a valid email address"],
-    },
+    email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now },
   },
-  { timestamps: true, versionKey: false }
+  {
+    timestamps: true,
+    versionKey: false,
+  },
 );
 
-usersSchema.methods.toJSON = function () {
+userSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
   return obj;
 };
 
-export const UsersCollection = model("users", usersSchema);
+export const User = model('users', userSchema);

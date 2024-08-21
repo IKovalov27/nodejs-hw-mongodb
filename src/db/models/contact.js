@@ -1,6 +1,6 @@
-import { model, Schema } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-const ContactSchema = new Schema(
+const contactSchema = new Schema(
   {
     name: { type: String, required: true },
     phoneNumber: { type: String, required: true },
@@ -12,22 +12,17 @@ const ContactSchema = new Schema(
       required: true,
       default: 'personal',
     },
-    userId: { type: Schema.Types.ObjectId, ref: 'users', required: true },
-    photo: {
-      type: String,
-      required: false,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+      required: true,
     },
+    photo: { type: String },
   },
   {
     timestamps: true,
-    toJSON: {
-      transform: function (doc, ret) {
-        delete ret.__v;
-        return ret;
-      },
-    },
     versionKey: false,
   },
 );
 
-export const ContactCollection = model('contacts', ContactSchema);
+export const Contact = model('contacts', contactSchema);
