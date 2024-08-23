@@ -7,10 +7,7 @@
   "scripts": {
     "lint": "eslint src/**/*.js",
     "start": "node ./src/index.js",
-    "dev": "nodemon src/index.js",
-    "build": "npm run build-docs",
-    "build-docs": "redocly bundle",
-    "preview-docs": "redocly preview-docs"
+    "dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "Illia Kovalov",
